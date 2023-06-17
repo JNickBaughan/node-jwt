@@ -1,0 +1,13 @@
+{
+  "name": "node-jwt",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/JNickBaughan/node-jwt.git",
+  "author": "J. Nick Baughan <JNickBaughan@Gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0"
+  }
+}
