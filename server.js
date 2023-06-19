@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const server = express();
 server.use(express.json());
@@ -13,10 +14,18 @@ const getDataStore = () => {
         // TODO add safety checks
         if(store[name]){ 
             const match = await bcrypt.compare(password, store[name].password);
-            // TODO send JWT in future
+            
             if(match){
+                const token = jwt.sign(
+                    { user_id: name },
+                    "randomCharForTokenKey",
+                    {
+                      expiresIn: "2h",
+                    }
+                  );
                 return {
-                    error: false
+                    error: false,
+                    token
                 }
             }
             return {
@@ -42,7 +51,7 @@ const getDataStore = () => {
                 name,
                 password: hash
             }
-    
+
             return {
                 error: false
             }
@@ -78,7 +87,7 @@ server.post("/login", async (req, res) => {
     const { name, password } = req.body;
     const result = await dataStore.authenticateUser({ name, password });
     if(!result.error){
-        res.status(200).send(`${name} is authenticated`);
+        res.status(200).send(`${name} is authenticated. JWT token is ${result.token}`);
     }else{
         res.status(400).send(`There was an issue authenticating user ${name}`);
     }
